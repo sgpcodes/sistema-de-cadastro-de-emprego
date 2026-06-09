@@ -1,0 +1,73 @@
+services:
+  - type: web
+    name: auth-service
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: empregabilidade_db
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: workers-service
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: empregabilidade_db
+          property: connectionString
+
+  - type: web
+    name: referrals-service
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: empregabilidade_db
+          property: connectionString
+
+  - type: web
+    name: assistance-service
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: empregabilidade_db
+          property: connectionString
+
+  - type: web
+    name: reports-service
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: empregabilidade_db
+          property: connectionString
+
+databases:
+  - name: empregabilidade_db
+    databaseName: empregabilidade_db
+    user: empregabilidade
+    region: oregon

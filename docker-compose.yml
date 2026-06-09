@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: empregabilidade
+      POSTGRES_PASSWORD: senha_segura_123
+      POSTGRES_DB: empregabilidade_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/shared/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
+  auth-service:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
+      JWT_SECRET: seu_jwt_secret_muito_seguro_aqui
+      NODE_ENV: development
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+    volumes:
+      - ./services/auth/src:/app/src
+
+  workers-service:
+    build:
+      context: ./services/workers
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+      NODE_ENV: development
+      PORT: 3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+      - auth-service
+    networks:
+      - app-network
+    volumes:
+      - ./services/workers/src:/app/src
+
+  referrals-service:
+    build:
+      context: ./services/referrals
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+      WORKERS_SERVICE_URL: http://workers-service:3002
+      NODE_ENV: development
+      PORT: 3003
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+      - auth-service
+      - workers-service
+    networks:
+      - app-network
+    volumes:
+      - ./services/referrals/src:/app/src
+
+  assistance-service:
+    build:
+      context: ./services/assistance
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+      WORKERS_SERVICE_URL: http://workers-service:3002
+      NODE_ENV: development
+      PORT: 3004
+    ports:
+      - "3004:3004"
+    depends_on:
+      - postgres
+      - auth-service
+      - workers-service
+    networks:
+      - app-network
+    volumes:
+      - ./services/assistance/src:/app/src
+
+  reports-service:
+    build:
+      context: ./services/reports
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
+      AUTH_SERVICE_URL: http://auth-service:3001
+      WORKERS_SERVICE_URL: http://workers-service:3002
+      REFERRALS_SERVICE_URL: http://referrals-service:3003
+      ASSISTANCE_SERVICE_URL: http://assistance-service:3004
+      NODE_ENV: development
+      PORT: 3005
+    ports:
+      - "3005:3005"
+    depends_on:
+      - postgres
+      - auth-service
+    networks:
+      - app-network
+    volumes:
+      - ./services/reports/src:/app/src
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_AUTH_URL: http://auth-service:3001
+      VITE_API_WORKERS_URL: http://workers-service:3002
+      VITE_API_REFERRALS_URL: http://referrals-service:3003
+      VITE_API_ASSISTANCE_URL: http://assistance-service:3004
+      VITE_API_REPORTS_URL: http://reports-service:3005
+    ports:
+      - "5173:5173"
+    depends_on:
+      - auth-service
+      - workers-service
+      - referrals-service
+      - assistance-service
+      - reports-service
+    networks:
+      - app-network
+    volumes:
+      - ./apps/frontend/src:/app/src
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
