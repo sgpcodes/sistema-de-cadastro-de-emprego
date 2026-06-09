@@ -18,12 +18,12 @@ app.get('/health', (_req, res) => {
 
 app.post('/workers', async (req, res) => {
   try {
-    const { usuarioId, cpf, telefone, escolaridade, profissao, experiencia } = req.body;
+    const { nome, cpf, telefone, escolaridade, profissao, experiencia } = req.body;
     const result = await pool.query(
-      `INSERT INTO trabalhadores (usuario_id, cpf, telefone, escolaridade, profissao, experiencia)
+      `INSERT INTO trabalhadores (nome, cpf, telefone, escolaridade, profissao, experiencia)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [usuarioId, cpf, telefone, escolaridade, profissao, experiencia]
+      [nome, cpf, telefone, escolaridade, profissao, experiencia]
     );
     res.status(201).json(result.rows[0]);
   } catch (error: any) {
@@ -56,13 +56,13 @@ app.get('/workers/:id', async (req, res) => {
 app.put('/workers/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { cpf, telefone, escolaridade, profissao, experiencia, status } = req.body;
+    const { nome, cpf, telefone, escolaridade, profissao, experiencia, status } = req.body;
     const result = await pool.query(
       `UPDATE trabalhadores
-       SET cpf = $1, telefone = $2, escolaridade = $3, profissao = $4, experiencia = $5, status = $6, atualizado_em = CURRENT_TIMESTAMP
-       WHERE id = $7
+       SET nome = $1, cpf = $2, telefone = $3, escolaridade = $4, profissao = $5, experiencia = $6, status = $7, atualizado_em = CURRENT_TIMESTAMP
+       WHERE id = $8
        RETURNING *`,
-      [cpf, telefone, escolaridade, profissao, experiencia, status, id]
+      [nome, cpf, telefone, escolaridade, profissao, experiencia, status, id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ erro: 'Trabalhador não encontrado' });

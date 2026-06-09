@@ -21,7 +21,7 @@ describe('Workers Service - Create Worker', () => {
 
   it('should create a worker successfully', async () => {
     const workerData = {
-      usuarioId: 1,
+      nome: 'Ana Paula Santos',
       cpf: '12345678901',
       telefone: '1199999999',
       escolaridade: 'Ensino Superior',
@@ -38,7 +38,7 @@ describe('Workers Service - Create Worker', () => {
 
   it('should fail to create worker with duplicate CPF', async () => {
     const workerData = {
-      usuarioId: 1,
+      nome: 'Ana Paula Santos',
       cpf: '12345678901',
       telefone: '1199999999',
       escolaridade: 'Ensino Superior',

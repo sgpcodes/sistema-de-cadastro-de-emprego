@@ -1,19 +1,7 @@
--- Create Users Table (Authentication)
-CREATE TABLE IF NOT EXISTS usuarios (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) UNIQUE NOT NULL,
-  senha_hash VARCHAR(255) NOT NULL,
-  nome VARCHAR(255) NOT NULL,
-  perfil VARCHAR(50) NOT NULL CHECK (perfil IN ('ADMIN', 'ATENDENTE', 'EMPRESA', 'TRABALHADOR')),
-  ativo BOOLEAN DEFAULT true,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Create Workers Table
 CREATE TABLE IF NOT EXISTS trabalhadores (
   id SERIAL PRIMARY KEY,
-  usuario_id INTEGER UNIQUE NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+  nome VARCHAR(255) NOT NULL,
   cpf VARCHAR(11) UNIQUE NOT NULL,
   telefone VARCHAR(20),
   escolaridade VARCHAR(100),
@@ -86,7 +74,6 @@ CREATE TABLE IF NOT EXISTS atendimentos (
 );
 
 -- Create Indexes
-CREATE INDEX IF NOT EXISTS idx_trabalhadores_usuario_id ON trabalhadores(usuario_id);
 CREATE INDEX IF NOT EXISTS idx_trabalhadores_status ON trabalhadores(status);
 CREATE INDEX IF NOT EXISTS idx_vagas_empresa_id ON vagas(empresa_id);
 CREATE INDEX IF NOT EXISTS idx_vagas_status ON vagas(status);
