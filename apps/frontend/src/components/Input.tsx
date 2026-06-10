@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, SelectHTMLAttributes } from 'react';
+import { InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 interface BaseFieldProps {
   label: string;
@@ -50,3 +50,24 @@ export function Select({ label, error, id, options, className = '', ...props }: 
     </label>
   );
 }
+
+interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement>, BaseFieldProps {}
+
+export function Textarea({ label, error, id, className = '', ...props }: TextareaProps) {
+  const fieldId = id || props.name || label.toLowerCase().replace(/\s+/g, '-');
+
+  return (
+    <label className="field" htmlFor={fieldId}>
+      <span>{label}</span>
+      <textarea
+        id={fieldId}
+        className={`field-textarea ${error ? 'field-error' : ''} ${className}`.trim()}
+        aria-invalid={!!error}
+        rows={3}
+        {...props}
+      />
+      {error && <small>{error}</small>}
+    </label>
+  );
+}
+

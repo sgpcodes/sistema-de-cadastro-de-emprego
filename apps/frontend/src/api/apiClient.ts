@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api'
-});
+const WORKERS_URL = import.meta.env.VITE_API_WORKERS_URL || 'http://localhost:3002';
+const REFERRALS_URL = import.meta.env.VITE_API_REFERRALS_URL || 'http://localhost:3003';
+const AUTH_URL = import.meta.env.VITE_API_AUTH_URL || 'http://localhost:3001';
 
-export default apiClient;
+const authApi = axios.create({ baseURL: AUTH_URL });
+export const workersApi = axios.create({ baseURL: WORKERS_URL });
+export const referralsApi = axios.create({ baseURL: REFERRALS_URL });
+
+export default authApi;

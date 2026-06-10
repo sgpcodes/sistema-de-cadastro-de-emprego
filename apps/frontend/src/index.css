@@ -507,6 +507,24 @@ tbody tr:hover {
   box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.12);
 }
 
+.field-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  outline: 0;
+  resize: vertical;
+  font: inherit;
+}
+
+.field-textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.12);
+}
+
 .field small {
   color: var(--red);
   font-weight: 700;
