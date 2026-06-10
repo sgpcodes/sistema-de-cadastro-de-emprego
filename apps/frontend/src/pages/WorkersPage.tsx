@@ -57,6 +57,13 @@ const STATUS_LABELS: Record<string, string> = {
   INATIVO: 'Inativo',
 };
 
+const STATUS_COLORS: Record<string, string> = {
+  ATIVO: 'status-blue',
+  ENCAMINHADO: 'status-yellow',
+  CONTRATADO: 'status-green',
+  INATIVO: 'status-gray',
+};
+
 const ESCOLARIDADE_OPTIONS = [
   { label: 'Não informado', value: '' },
   { label: 'Fundamental Incompleto', value: 'Fundamental Incompleto' },
@@ -253,7 +260,7 @@ export default function WorkersPage() {
             key: 'status',
             label: 'Status',
             render: (row) => (
-              <span className="status-badge status-blue">
+              <span className={`status-badge ${STATUS_COLORS[row.status] || 'status-blue'}`}>
                 {STATUS_LABELS[row.status] || row.status}
               </span>
             ),

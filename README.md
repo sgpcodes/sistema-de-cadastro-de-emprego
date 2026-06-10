@@ -1,207 +1,159 @@
 # Sistema de Gestão de Empregabilidade e Assistência ao Trabalhador
 
-Sistema web completo para centralizar o atendimento ao trabalhador, desde o primeiro atendimento até sua possível contratação.
+Sistema web completo para centralizar o atendimento ao trabalhador, desde o primeiro contato até a contratação. Desenvolvido como monorepo com arquitetura de microsserviços, Clean Architecture e princípios SOLID.
 
 ## 🏗️ Arquitetura
 
-Projeto organizado como monorepo com microsserviços:
+| Serviço | Porta | Responsabilidade |
+|---|---|---|
+| Frontend (React + Vite) | 5173 | Interface do usuário |
+| Auth Service | 3001 | Autenticação JWT |
+| Workers Service | 3002 | CRUD de trabalhadores |
+| Referrals Service | 3003 | Empresas e vagas |
+| Assistance Service | 3004 | Registros de atendimento |
+| PostgreSQL | 5432 | Banco de dados |
 
-- **Frontend**: React + Vite + Router + Axios
-- **Auth Service**: Autenticação com JWT
-- **Workers Service**: CRUD de trabalhadores
-- **Referrals Service**: Vagas e encaminhamentos
-- **Assistance Service**: Seguro-desemprego e assistência
-- **Reports Service**: Dashboard e indicadores
-- **Database**: PostgreSQL
+> O Reports Service (porta 3005) está presente na estrutura mas não é utilizado pela interface atual.
 
-## 🚀 Instalação e Setup
+## 🚀 Como Executar
 
-### Pré-requisitos
-- Node.js 18+
-- Docker e Docker Compose
-- npm ou yarn
-
-### Com Docker Compose
+### Com Docker Compose (recomendado)
 
 ```bash
-# Clone ou extraia o projeto
-cd sistema-de-cadastro-de-emprego
-
-# Inicie todos os serviços
 docker-compose up -d
-
-# Aguarde alguns segundos para o banco de dados inicializar
-# A aplicação estará disponível em http://localhost:5173
+# Frontend disponível em http://localhost:5173
 ```
 
-### Desenvolvimento Local
+### Desenvolvimento local
 
 ```bash
-# Instale as dependências de todos os workspaces
 npm install
-
-# Inicie todos os serviços em paralelo
 npm run dev
-
-# Ou inicie cada serviço separadamente:
-cd apps/frontend && npm run dev
-cd services/auth && npm run dev
-cd services/workers && npm run dev
-# ... etc
 ```
 
-## 📋 Funcionalidades
+## 📋 Módulos Implementados
 
-### Autenticação
-- Login
-- Cadastro
-- JWT Token
-- Controle de perfil
+### Dashboard Ilustrativo (`/`)
+- Exibe indicadores e gráficos demonstrativos
+- **Os dados são fictícios** — não refletem registros reais do banco
 
-### Trabalhadores
-- Cadastro (CPF, Nome, Telefone, Email, Escolaridade, Profissão, Experiência)
-- Consulta
-- Atualização
-- Status (ATIVO, ENCAMINHADO, CONTRATADO, INATIVO)
+### Trabalhadores (`/workers`)
+- Cadastro: Nome, CPF, Telefone, Cargo desejado, Escolaridade, Experiência profissional
+- Edição completa dos dados e status
+- Status com indicador visual: **Disponível** (azul) · **Encaminhado** (amarelo) · **Contratado** (verde)
+- Visualização de detalhes
 
-### Vagas
-- Cadastro de empresas
-- Cadastro de vagas
-- Status (ABERTA, PREENCHIDA, CANCELADA)
+### Empresas (`/companies`)
+- Cadastro completo: Razão Social, Nome Fantasia, CNPJ, Ramo de Atividade, Porte, Qtd. Funcionários
+- Localização: CEP, Endereço, Número, Complemento, Bairro, Cidade, Estado
+- Contato: Responsável, Cargo, Telefone, Celular, E-mail, WhatsApp
+- Informações adicionais: Site, Benefícios, Horário de funcionamento, Observações
+- Status com indicador visual: **Ativa** (verde) · **Inativa** (vermelho) · **Parceira** (azul)
+- Detalhes incluem histórico de vagas (total, abertas, preenchidas, canceladas)
 
-### Encaminhamentos
-- Encaminhar trabalhador para vaga
-- Acompanhar status
-- Status (PENDENTE, ACEITO, REJEITADO, CONTRATADO)
+### Vagas (`/vacancies`)
+- Cadastro vinculado a uma empresa (selecionada via dropdown)
+- Campos: Cargo, Salário, Requisitos, Status
+- Status com indicador visual: **Aberta** (azul) · **Preenchida** (verde) · **Cancelada** (vermelho)
+- Alteração de status via modal dedicado
+- Detalhes exibem dados de contato da empresa vinculada
 
-### Assistência
-- Seguro-desemprego
-- Atendimento psicológico
-- Orientação profissional
-- Ajuda com currículo
+### Assistência (`/assistance`)
+- Cadastro de atendimentos de forma independente (sem vínculo obrigatório com trabalhador)
+- Dados da pessoa atendida: Nome, CPF, Telefone, Escolaridade, Profissão, Cargo desejado, Experiência
+- Informações do atendimento: Tipo, Descrição detalhada
+- Tipos disponíveis: Orientação Profissional, Assistência Psicológica, Seguro-Desemprego, Informações e Cadastros, Outros
+- Data e hora registradas automaticamente
 
-### Dashboard
-- Indicadores de empregabilidade
-- Estatísticas
-- Taxa de contratação
+## 🗄️ Banco de Dados
 
-## 🧪 Testes
+### Tabelas
 
+| Tabela | Descrição |
+|---|---|
+| `trabalhadores` | Dados e status dos trabalhadores |
+| `empresas` | Cadastro completo de empresas parceiras |
+| `vagas` | Vagas vinculadas às empresas |
+| `encaminhamentos` | Registro de encaminhamentos (trabalhador → vaga) |
+| `atendimentos` | Atendimentos de assistência (standalone) |
+
+### Migrations automáticas
+Cada serviço aplica suas migrations antes de iniciar. Isso garante que volumes Docker com schema antigo sejam atualizados automaticamente sem necessidade de recriar o volume.
+
+## 🔧 Stack Técnico
+
+**Frontend:** React 18 · TypeScript · Vite · React Router · Axios  
+**Backend:** Node.js 18 · Express.js · TypeScript · pg (node-postgres)  
+**Banco:** PostgreSQL 15  
+**Infra:** Docker · Docker Compose  
+**Padrões:** Clean Architecture · SOLID · Repository Pattern · Dependency Injection
+
+## 📝 Variáveis de Ambiente
+
+Cada serviço lê `.env` na raiz do serviço. Variáveis principais:
+
+```env
+DATABASE_URL=postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
+JWT_SECRET=sua_chave_secreta
+PORT=3002
+NODE_ENV=development
+```
+
+## 🔐 Banco de Dados (credenciais padrão Docker)
+
+```
+Host: localhost:5432
+Database: empregabilidade_db
+User: empregabilidade
+Password: senha_segura_123
+```
+
+## 🛠️ Troubleshooting
+
+**Serviço não conecta ao banco:**
 ```bash
-# Rodar todos os testes
-npm test
-
-# Cobertura de testes (meta: 80%)
-npm run test:coverage
+docker-compose logs postgres
+docker ps
 ```
 
-## 📊 Cenários BDD
-
-### Funcionalidade: Encaminhar Trabalhador
-```
-Dado que existe um trabalhador cadastrado
-E existe uma vaga disponível
-Quando o atendente realizar o encaminhamento
-Então o sistema deve registrar o encaminhamento
-E atualizar o status do trabalhador
+**Porta já em uso:**
+```bash
+# Linux/Mac
+lsof -i :5173
+# Windows
+netstat -ano | findstr :5173
 ```
 
-### Funcionalidade: Registrar Contratação
+**Reiniciar um serviço após alteração de código:**
+```bash
+docker-compose restart referrals-service
+docker-compose restart assistance-service
 ```
-Dado que existe um trabalhador encaminhado
-Quando a empresa informar a contratação
-Então o sistema deve atualizar o status para contratado
+
+**Recriar containers do zero (perde dados):**
+```bash
+docker-compose down -v
+docker-compose up -d
 ```
 
-## 🛠️ Stack Técnico
-
-- **Frontend**: React, TypeScript, Vite
-- **Backend**: Node.js, Express, TypeScript
-- **Database**: PostgreSQL
-- **Testing**: Jest, Supertest, Cucumber
-- **Containerização**: Docker, Docker Compose
-- **Padrões**: Clean Architecture, SOLID, Design Patterns
-- **Deploy**: Vercel (Frontend), Render/Railway (Backend)
-
-## 📁 Estrutura do Projeto
+## 📁 Estrutura de Pastas
 
 ```
 ├── apps/
-│   └── frontend/
-│       ├── src/
-│       │   ├── pages/
-│       │   ├── components/
-│       │   ├── store/
-│       │   ├── api/
-│       │   └── main.tsx
-│       └── package.json
+│   └── frontend/src/
+│       ├── pages/           # CompaniesPage, WorkersPage, VacanciesPage, AssistancePage, DashboardPage
+│       ├── components/      # Button, Input, Modal, Table, Toast, Sidebar, Card...
+│       └── api/apiClient.ts # Instâncias Axios por serviço
 ├── services/
-│   ├── auth/
-│   │   ├── src/
-│   │   │   ├── domain/
-│   │   │   ├── application/
-│   │   │   ├── infrastructure/
-│   │   │   ├── presentation/
-│   │   │   └── index.ts
-│   │   └── package.json
-│   ├── workers/
-│   ├── referrals/
-│   ├── assistance/
-│   └── reports/
-├── shared/
-│   └── database/
-│       └── init.sql
+│   ├── auth/src/            # Clean Architecture (domain/application/infrastructure/presentation)
+│   ├── workers/src/index.ts
+│   ├── referrals/src/index.ts  # Empresas + Vagas
+│   ├── assistance/src/index.ts
+│   └── shared/database/init.sql
 ├── docker-compose.yml
 └── package.json
 ```
 
-## 🌐 URLs dos Serviços
-
-- **Frontend**: http://localhost:5173
-- **Auth Service**: http://localhost:3001
-- **Workers Service**: http://localhost:3002
-- **Referrals Service**: http://localhost:3003
-- **Assistance Service**: http://localhost:3004
-- **Reports Service**: http://localhost:3005
-- **Database**: localhost:5432
-
-## 📝 Credenciais Padrão
-
-### Database
-- User: `empregabilidade`
-- Password: `senha_segura_123`
-- Database: `empregabilidade_db`
-
-## 🚢 Deploy
-
-### Frontend (Vercel)
-```bash
-# Buildar para produção
-npm run build
-
-# Deploy automático via Git
-```
-
-### Backend (Render/Railway)
-```bash
-# Configure as variáveis de ambiente
-# Faça deploy via Git ou CLI
-```
-
-## 📖 Documentação Adicional
-
-- Clean Architecture implementada em cada microsserviço
-- Princípios SOLID aplicados
-- Design Patterns: Repository, Factory, Strategy, Dependency Injection, Observer
-- TDD com cobertura mínima de 80%
-
-## 📞 Suporte
-
-Para dúvidas ou problemas, verifique os logs:
-```bash
-docker-compose logs -f [service-name]
-```
-
 ## 📄 Licença
 
-Este projeto é parte de um projeto acadêmico integrador.
+Projeto acadêmico integrador — 2026.

@@ -67,8 +67,8 @@ export default function DashboardPage() {
       <div className="page-heading">
         <div>
           <span className="eyebrow">Visão geral</span>
-          <h1>Dashboard</h1>
-          <p>Indicadores operacionais do cadastro de emprego.</p>
+          <h1>Dashboard Ilustrativo</h1>
+          <p>Dados demonstrativos — os indicadores abaixo não refletem registros reais do sistema.</p>
         </div>
       </div>
 

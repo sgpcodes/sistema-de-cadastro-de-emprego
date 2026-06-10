@@ -9,9 +9,9 @@ Sistema web completo para centralizar o atendimento ao trabalhador, desde o prim
 ### Microsserviços
 - **Auth Service** (port 3001): Autenticação com JWT
 - **Workers Service** (port 3002): CRUD de trabalhadores
-- **Referrals Service** (port 3003): Vagas e encaminhamentos
-- **Assistance Service** (port 3004): Seguro-desemprego e assistência
-- **Reports Service** (port 3005): Dashboard e indicadores
+- **Referrals Service** (port 3003): Empresas e vagas (empresas com CRUD completo, vagas vinculadas a empresa_id)
+- **Assistance Service** (port 3004): Atendimentos standalone (sem FK obrigatória a trabalhadores)
+- **Reports Service** (port 3005): Presente na estrutura, não utilizado pela interface atual
 - **Frontend** (port 5173): React + Vite
 - **Database** (port 5432): PostgreSQL
 
@@ -160,40 +160,37 @@ Cada serviço tem `.env` configurado. Em produção, usar:
 ## 📊 Funcionalidades por Serviço
 
 ### Auth Service
-- ✅ Login
-- ✅ Signup
-- ✅ JWT geração/validação
-- ✅ Controle de perfil
+- ✅ Login, Signup, JWT, Controle de perfil
 
 ### Workers Service
-- ✅ Create: POST /workers
-- ✅ Read: GET /workers, GET /workers/:id
-- ✅ Update: PUT /workers/:id
-- ✅ Delete: DELETE /workers/:id
+- ✅ POST /workers, GET /workers, GET /workers/:id, PUT /workers/:id, DELETE /workers/:id
+- ✅ Campos: nome, cpf, telefone, escolaridade, profissao, experiencia, status
+- ✅ Status: ATIVO (Disponível), ENCAMINHADO, CONTRATADO, INATIVO
 
 ### Referrals Service
-- ✅ Vagas: CREATE, READ, UPDATE
-- ✅ Encaminhamentos: CREATE, READ, UPDATE status
+- ✅ GET /companies, GET /companies/:id (com vagas), POST /companies, PUT /companies/:id, DELETE /companies/:id
+- ✅ Empresas com CNPJ, localização completa, contato, benefícios, status (ATIVA/INATIVA/PARCEIRA)
+- ✅ GET /vacancies, POST /vacancies (aceita empresa_id ou nome empresa), PUT /vacancies/:id, DELETE /vacancies/:id
+- ✅ Status vagas: ABERTA, PREENCHIDA, CANCELADA
+- ✅ GET /vacancies retorna campos empresa_* via JOIN
 
 ### Assistance Service
-- ✅ Seguro-desemprego: CREATE, READ
-- ✅ Atendimentos: CREATE, READ
+- ✅ POST /assistance, GET /assistance, GET /assistance/:id, PUT /assistance/:id, DELETE /assistance/:id
+- ✅ Atendimentos standalone: nome_atendido, cpf_atendido, telefone_atendido, escolaridade, profissao, experiencia, cargo_desejado, tipo, descricao
+- ✅ Tipos: ORIENTACAO_PROFISSIONAL, ASSISTENCIA_PSICOLOGICA, SEGURO_DESEMPREGO, INFORMACOES_CADASTROS, OUTROS
 
 ### Reports Service
-- ✅ Dashboard com indicadores
-- ✅ Taxa de empregabilidade
-- ✅ Estatísticas por status
+- ⚠️ Container existe, sem endpoints ativos consumidos pela interface
 
 ## 🎯 Próximos Passos
 
-1. Implementar validações mais robustas
+1. Implementar validações mais robustas (CPF, CNPJ, e-mail)
 2. Adicionar paginação em listas
-3. Implementar filtros avançados
+3. Implementar filtros avançados por status, cidade, data
 4. Adicionar upload de arquivos (currículos)
-5. Integrar com serviço de notificações (email/SMS)
+5. Dashboard com dados reais do banco (substituir o ilustrativo)
 6. Implementar relatórios em PDF
-7. Dashboard com gráficos
-8. Mobile app (React Native)
+7. Mobile app (React Native)
 
 ## 🔗 URLs Importantes
 
@@ -245,5 +242,5 @@ Para adicionar novas funcionalidades:
 
 ---
 
-**Última atualização**: 2026-06-05
-**Versão**: 1.0.0
+**Última atualização**: 2026-06-10
+**Versão**: 1.1.0

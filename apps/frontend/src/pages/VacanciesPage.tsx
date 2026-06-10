@@ -7,6 +7,8 @@ import Table from '../components/Table';
 import Toast from '../components/Toast';
 import { referralsApi } from '../api/apiClient';
 
+type Company = { id: number; razao_social: string; cidade?: string; estado?: string; };
+
 type Vacancy = {
   id: number;
   empresa_id: number;
@@ -17,6 +19,13 @@ type Vacancy = {
   criado_em: string;
   empresa_nome: string;
   empresa_localizacao: string;
+  empresa_cidade: string;
+  empresa_estado: string;
+  empresa_telefone: string;
+  empresa_celular: string;
+  empresa_email: string;
+  empresa_responsavel: string;
+  empresa_endereco: string;
 };
 
 type VacancyRow = {
@@ -38,6 +47,12 @@ const STATUS_LABELS: Record<string, string> = {
   ABERTA: 'Aberta',
   PREENCHIDA: 'Preenchida',
   CANCELADA: 'Cancelada',
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  ABERTA: 'status-blue',
+  PREENCHIDA: 'status-green',
+  CANCELADA: 'status-red',
 };
 
 function formatSalary(value: string | number | null) {
@@ -76,8 +91,14 @@ const detailValueStyle: React.CSSProperties = {
   whiteSpace: 'pre-wrap',
 };
 
+const sectionLabel: React.CSSProperties = {
+  fontSize: '0.78rem', fontWeight: 800, color: '#1e88e5',
+  textTransform: 'uppercase', letterSpacing: '0.04em',
+};
+
 export default function VacanciesPage() {
   const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -87,7 +108,7 @@ export default function VacanciesPage() {
   const [savingStatus, setSavingStatus] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [form, setForm] = useState({
-    cargo: '', empresa: '', localizacao: '', salario: '', requisitos: '', status: 'ABERTA',
+    cargo: '', empresa_id: '', salario: '', requisitos: '', status: 'ABERTA',
   });
   const [saving, setSaving] = useState(false);
 
@@ -107,10 +128,30 @@ export default function VacanciesPage() {
     }
   }
 
-  useEffect(() => { loadVacancies(); }, []);
+  async function loadCompanies() {
+    try {
+      const { data } = await referralsApi.get<Company[]>('/companies');
+      setCompanies(data);
+    } catch {
+      // non-fatal — form will show empty dropdown
+    }
+  }
+
+  useEffect(() => {
+    loadVacancies();
+    loadCompanies();
+  }, []);
+
+  const companyOptions = [
+    { label: 'Selecione a empresa...', value: '' },
+    ...companies.map((c) => ({
+      label: c.razao_social + (c.cidade ? ` — ${c.cidade}${c.estado ? `/${c.estado}` : ''}` : ''),
+      value: String(c.id),
+    })),
+  ];
 
   async function handleCreate() {
-    if (!form.cargo.trim() || !form.empresa.trim()) {
+    if (!form.cargo.trim() || !form.empresa_id) {
       showToast('error', 'Cargo e Empresa são obrigatórios.');
       return;
     }
@@ -118,14 +159,13 @@ export default function VacanciesPage() {
     try {
       await referralsApi.post('/vacancies', {
         cargo: form.cargo.trim(),
-        empresa: form.empresa.trim(),
-        localizacao: form.localizacao.trim() || null,
+        empresa_id: parseInt(form.empresa_id),
         salario: form.salario ? parseFloat(form.salario.replace(',', '.')) : null,
         requisitos: form.requisitos.trim() || null,
         status: form.status,
       });
       setIsCreateOpen(false);
-      setForm({ cargo: '', empresa: '', localizacao: '', salario: '', requisitos: '', status: 'ABERTA' });
+      setForm({ cargo: '', empresa_id: '', salario: '', requisitos: '', status: 'ABERTA' });
       showToast('success', 'Vaga cadastrada com sucesso.');
       loadVacancies();
     } catch (err: any) {
@@ -220,7 +260,7 @@ export default function VacanciesPage() {
             key: 'status',
             label: 'Status',
             render: (row) => (
-              <span className="status-badge status-blue">
+              <span className={`status-badge ${STATUS_COLORS[row.status] || 'status-blue'}`}>
                 {STATUS_LABELS[row.status] || row.status}
               </span>
             ),
@@ -256,19 +296,12 @@ export default function VacanciesPage() {
             value={form.cargo}
             onChange={(e) => setForm((f) => ({ ...f, cargo: e.target.value }))}
           />
-          <Input
+          <Select
             label="Empresa"
-            name="empresa"
-            placeholder="Nome da empresa"
-            value={form.empresa}
-            onChange={(e) => setForm((f) => ({ ...f, empresa: e.target.value }))}
-          />
-          <Input
-            label="Localização"
-            name="localizacao"
-            placeholder="Ex: São Paulo, SP"
-            value={form.localizacao}
-            onChange={(e) => setForm((f) => ({ ...f, localizacao: e.target.value }))}
+            name="empresa_id"
+            value={form.empresa_id}
+            onChange={(e) => setForm((f) => ({ ...f, empresa_id: e.target.value }))}
+            options={companyOptions}
           />
           <Input
             label="Salário (R$)"
@@ -361,17 +394,37 @@ export default function VacanciesPage() {
       >
         {selected && (
           <div style={detailStyle}>
-            {(
-              [
-                ['Cargo', selected.cargo],
-                ['Empresa', selected.empresa_nome || '-'],
-                ['Localização', selected.empresa_localizacao || '-'],
-                ['Salário', formatSalary(selected.salario)],
-                ['Status', STATUS_LABELS[selected.status] || selected.status],
-                ['Data de publicação', formatDate(selected.criado_em)],
-                ['Requisitos', selected.requisitos || '-'],
-              ] as [string, string][]
-            ).map(([label, value]) => (
+            <div style={{ marginBottom: '2px' }}>
+              <span style={sectionLabel}>Dados da Vaga</span>
+            </div>
+            {([
+              ['Cargo', selected.cargo],
+              ['Salário', formatSalary(selected.salario)],
+              ['Status', STATUS_LABELS[selected.status] || selected.status],
+              ['Data de publicação', formatDate(selected.criado_em)],
+              ['Requisitos', selected.requisitos || '-'],
+            ] as [string, string][]).map(([label, value]) => (
+              <div key={label} style={detailRowStyle}>
+                <span style={detailLabelStyle}>{label}</span>
+                {label === 'Status'
+                  ? <span className={`status-badge ${STATUS_COLORS[selected.status] || 'status-blue'}`}>{value}</span>
+                  : <span style={detailValueStyle}>{value}</span>}
+              </div>
+            ))}
+
+            <div style={{ marginTop: '8px', marginBottom: '2px' }}>
+              <span style={sectionLabel}>Empresa</span>
+            </div>
+            {([
+              ['Nome', selected.empresa_nome || '-'],
+              ['Localização', selected.empresa_cidade && selected.empresa_estado
+                ? `${selected.empresa_cidade} - ${selected.empresa_estado}`
+                : selected.empresa_localizacao || '-'],
+              ['Endereço', selected.empresa_endereco || '-'],
+              ['Responsável', selected.empresa_responsavel || '-'],
+              ['Telefone', selected.empresa_telefone || selected.empresa_celular || '-'],
+              ['E-mail', selected.empresa_email || '-'],
+            ] as [string, string][]).map(([label, value]) => (
               <div key={label} style={detailRowStyle}>
                 <span style={detailLabelStyle}>{label}</span>
                 <span style={detailValueStyle}>{value}</span>

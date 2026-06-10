@@ -1,4 +1,4 @@
--- Create Workers Table
+-- Workers Table
 CREATE TABLE IF NOT EXISTS trabalhadores (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
@@ -12,23 +12,43 @@ CREATE TABLE IF NOT EXISTS trabalhadores (
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Companies Table
+-- Companies Table
 CREATE TABLE IF NOT EXISTS empresas (
   id SERIAL PRIMARY KEY,
   razao_social VARCHAR(255) NOT NULL,
+  nome_fantasia VARCHAR(255),
   cnpj VARCHAR(14) UNIQUE,
-  contato VARCHAR(255),
-  email VARCHAR(255),
-  telefone VARCHAR(20),
+  ramo_atividade VARCHAR(255),
+  porte VARCHAR(50),
+  qtd_funcionarios INTEGER,
+  cep VARCHAR(10),
+  endereco VARCHAR(255),
+  numero VARCHAR(20),
+  complemento VARCHAR(100),
+  bairro VARCHAR(100),
+  cidade VARCHAR(100),
+  estado VARCHAR(2),
   localizacao VARCHAR(255),
+  nome_responsavel VARCHAR(255),
+  cargo_responsavel VARCHAR(100),
+  contato VARCHAR(255),
+  telefone VARCHAR(20),
+  celular VARCHAR(20),
+  email VARCHAR(255),
+  whatsapp VARCHAR(20),
+  site VARCHAR(255),
+  observacoes TEXT,
+  beneficios TEXT,
+  horario_funcionamento VARCHAR(255),
+  status VARCHAR(50) DEFAULT 'ATIVA',
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Vacancies Table
+-- Vacancies Table
 CREATE TABLE IF NOT EXISTS vagas (
   id SERIAL PRIMARY KEY,
-  empresa_id INTEGER NOT NULL REFERENCES empresas(id) ON DELETE CASCADE,
+  empresa_id INTEGER REFERENCES empresas(id) ON DELETE CASCADE,
   cargo VARCHAR(255) NOT NULL,
   requisitos TEXT,
   salario DECIMAL(10, 2),
@@ -37,50 +57,40 @@ CREATE TABLE IF NOT EXISTS vagas (
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Referrals Table
+-- Referrals Table
 CREATE TABLE IF NOT EXISTS encaminhamentos (
   id SERIAL PRIMARY KEY,
-  trabalhador_id INTEGER NOT NULL REFERENCES trabalhadores(id) ON DELETE CASCADE,
-  vaga_id INTEGER NOT NULL REFERENCES vagas(id) ON DELETE CASCADE,
+  trabalhador_id INTEGER,
+  vaga_id INTEGER REFERENCES vagas(id) ON DELETE CASCADE,
   data_encaminhamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(50) DEFAULT 'PENDENTE' CHECK (status IN ('PENDENTE', 'ACEITO', 'REJEITADO', 'CONTRATADO')),
+  status VARCHAR(50) DEFAULT 'PENDENTE',
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Unemployment Insurance Table
-CREATE TABLE IF NOT EXISTS seguros_desemprego (
-  id SERIAL PRIMARY KEY,
-  trabalhador_id INTEGER NOT NULL REFERENCES trabalhadores(id) ON DELETE CASCADE,
-  data_inicio DATE NOT NULL,
-  data_fim DATE,
-  valor_parcela DECIMAL(10, 2),
-  parcelas_recebidas INTEGER DEFAULT 0,
-  parcelas_totais INTEGER,
-  status VARCHAR(50) DEFAULT 'ATIVO' CHECK (status IN ('ATIVO', 'CONCLUIDO', 'CANCELADO')),
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create Assistance Table
+-- Assistance Table (standalone — no FK to trabalhadores required)
 CREATE TABLE IF NOT EXISTS atendimentos (
   id SERIAL PRIMARY KEY,
-  trabalhador_id INTEGER NOT NULL REFERENCES trabalhadores(id) ON DELETE CASCADE,
-  tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('PSICOLOGICO', 'ORIENTACAO_PROFISSIONAL', 'CURRICULO', 'OUTRO')),
+  trabalhador_id INTEGER,
+  nome_atendido VARCHAR(255),
+  cpf_atendido VARCHAR(11),
+  telefone_atendido VARCHAR(20),
+  escolaridade VARCHAR(100),
+  profissao VARCHAR(255),
+  experiencia TEXT,
+  cargo_desejado VARCHAR(255),
+  tipo VARCHAR(100),
   descricao TEXT,
   data_atendimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(50) DEFAULT 'CONCLUIDO' CHECK (status IN ('AGENDADO', 'REALIZADO', 'CONCLUIDO')),
+  status VARCHAR(50) DEFAULT 'CONCLUIDO',
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Indexes
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_trabalhadores_status ON trabalhadores(status);
+CREATE INDEX IF NOT EXISTS idx_empresas_status ON empresas(status);
 CREATE INDEX IF NOT EXISTS idx_vagas_empresa_id ON vagas(empresa_id);
 CREATE INDEX IF NOT EXISTS idx_vagas_status ON vagas(status);
-CREATE INDEX IF NOT EXISTS idx_encaminhamentos_trabalhador_id ON encaminhamentos(trabalhador_id);
-CREATE INDEX IF NOT EXISTS idx_encaminhamentos_vaga_id ON encaminhamentos(vaga_id);
-CREATE INDEX IF NOT EXISTS idx_encaminhamentos_status ON encaminhamentos(status);
-CREATE INDEX IF NOT EXISTS idx_seguros_trabalhador_id ON seguros_desemprego(trabalhador_id);
-CREATE INDEX IF NOT EXISTS idx_atendimentos_trabalhador_id ON atendimentos(trabalhador_id);
 CREATE INDEX IF NOT EXISTS idx_atendimentos_tipo ON atendimentos(tipo);
+CREATE INDEX IF NOT EXISTS idx_atendimentos_criado_em ON atendimentos(criado_em);

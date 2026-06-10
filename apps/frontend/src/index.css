@@ -476,9 +476,24 @@ tbody tr:hover {
   background: var(--blue-light);
 }
 
+.status-green {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status-yellow {
+  color: #92400e;
+  background: #fef3c7;
+}
+
 .status-red {
   color: var(--red);
   background: var(--red-light);
+}
+
+.status-gray {
+  color: #374151;
+  background: #f3f4f6;
 }
 
 .field {
@@ -590,6 +605,9 @@ tbody tr:hover {
 
 .modal {
   width: min(100%, 680px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   background: var(--white);
   border-radius: 8px;
   box-shadow: 0 30px 70px rgba(17, 24, 39, 0.22);
@@ -598,6 +616,7 @@ tbody tr:hover {
 .modal header,
 .modal footer {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -617,6 +636,8 @@ tbody tr:hover {
 
 .modal-body {
   padding: 20px;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .spinner {
