@@ -14,7 +14,10 @@ const DATABASE_URL = process.env.DATABASE_URL || '';
 const JWT_SECRET = process.env.JWT_SECRET || 'seu_jwt_secret_muito_seguro_aqui';
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL ?? true,
+  credentials: true,
+}));
 
 const database = new DatabaseConnection(DATABASE_URL);
 const usuarioRepository = new UsuarioRepository(database);
@@ -28,6 +31,33 @@ app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'Auth Service is running' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Auth Service running on port ${PORT}`);
+async function runMigrations() {
+  try {
+    await database.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        senha_hash VARCHAR(255) NOT NULL,
+        nome VARCHAR(255) NOT NULL,
+        perfil VARCHAR(50) DEFAULT 'user',
+        ativo BOOLEAN DEFAULT TRUE,
+        criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('Auth Service: migrations aplicadas com sucesso.');
+  } catch (err) {
+    console.error('Auth Service: erro ao aplicar migrations:', err);
+  }
+}
+
+runMigrations().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Auth Service running on port ${PORT}`);
+  });
+}).catch((err) => {
+  console.error('Auth Service: falha nas migrations, iniciando mesmo assim:', err);
+  app.listen(PORT, () => {
+    console.log(`Auth Service running on port ${PORT}`);
+  });
 });

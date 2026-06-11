@@ -16,7 +16,10 @@ const PORT = process.env.PORT || 3002;
 const DATABASE_URL = process.env.DATABASE_URL || '';
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL ?? true,
+  credentials: true,
+}));
 
 // Dependency Injection — wires all layers together
 const db = new DatabaseConnection(DATABASE_URL);

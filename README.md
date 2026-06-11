@@ -7,37 +7,144 @@ Sistema web completo para centralizar o atendimento ao trabalhador, desde o prim
 ## Sumário
 
 1. [Arquitetura](#arquitetura)
-2. [Como Executar](#como-executar)
-3. [Módulos Implementados](#módulos-implementados)
-4. [Banco de Dados](#banco-de-dados)
-5. [Clean Architecture](#clean-architecture)
-6. [Princípios SOLID](#princípios-solid)
-7. [Design Patterns](#design-patterns)
-8. [Testes TDD](#testes-tdd)
-9. [BDD Cucumber](#bdd-cucumber)
-10. [Stack Técnico](#stack-técnico)
-11. [Variáveis de Ambiente](#variáveis-de-ambiente)
-12. [Segurança](#segurança)
-13. [Endpoints da API](#endpoints-da-api)
-14. [Estrutura de Pastas](#estrutura-de-pastas)
-15. [Troubleshooting](#troubleshooting)
-16. [Próximos Passos](#próximos-passos)
-17. [Referências](#referências)
+2. [Deploy no Render](#deploy-no-render)
+3. [Como Executar](#como-executar)
+4. [Módulos Implementados](#módulos-implementados)
+5. [Banco de Dados](#banco-de-dados)
+6. [Clean Architecture](#clean-architecture)
+7. [Princípios SOLID](#princípios-solid)
+8. [Design Patterns](#design-patterns)
+9. [Testes TDD](#testes-tdd)
+10. [BDD Cucumber](#bdd-cucumber)
+11. [Stack Técnico](#stack-técnico)
+12. [Variáveis de Ambiente](#variáveis-de-ambiente)
+13. [Segurança](#segurança)
+14. [Endpoints da API](#endpoints-da-api)
+15. [Estrutura de Pastas](#estrutura-de-pastas)
+16. [Troubleshooting](#troubleshooting)
+17. [Próximos Passos](#próximos-passos)
+18. [Referências](#referências)
 
 ---
 
 ## Arquitetura
 
-| Serviço | Porta | Responsabilidade |
+```
+┌─────────────────────────────────────────────────────────┐
+│                      Frontend (React)                    │
+│                     Vite · React Router                  │
+└───────┬─────────┬──────────┬──────────┬────────────────-┘
+        │         │          │          │          │
+        ▼         ▼          ▼          ▼          ▼
+  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
+  │  Auth    │ │ Workers  │ │Referrals │ │Assistance│ │ Reports  │
+  │ :3001    │ │  :3002   │ │  :3003   │ │  :3004   │ │  :3005   │
+  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘
+       └────────────┴────────────┴────────────┴─────────────┘
+                                 │
+                          ┌──────▼──────┐
+                          │  PostgreSQL  │
+                          │    :5432     │
+                          └─────────────┘
+```
+
+| Serviço | Porta local | Responsabilidade |
 |---|---|---|
 | Frontend (React + Vite) | 5173 | Interface do usuário |
-| Auth Service | 3001 | Autenticação JWT |
-| Workers Service | 3002 | CRUD de trabalhadores |
-| Referrals Service | 3003 | Empresas e vagas |
+| Auth Service | 3001 | Autenticação JWT, cadastro de usuários |
+| Workers Service | 3002 | CRUD de trabalhadores (Clean Architecture) |
+| Referrals Service | 3003 | Empresas, vagas e encaminhamentos |
 | Assistance Service | 3004 | Registros de atendimento |
-| PostgreSQL | 5432 | Banco de dados |
+| Reports Service | 3005 | Dashboard e relatórios analíticos |
+| PostgreSQL | 5432 | Banco de dados compartilhado |
 
-> O Reports Service (porta 3005) está presente na estrutura mas não é utilizado pela interface atual.
+> Todos os serviços compartilham o mesmo PostgreSQL e aplicam suas próprias migrations ao iniciar.
+
+---
+
+## Deploy no Render
+
+### Pré-requisitos
+
+- Conta no [Render.com](https://render.com) (plano gratuito é suficiente)
+- Repositório no GitHub conectado ao Render
+
+### Serviços criados pelo render.yaml
+
+O arquivo `render.yaml` declara **7 serviços** automaticamente:
+
+| Nome no Render | Tipo | Origem |
+|---|---|---|
+| `empregabilidade_db` | PostgreSQL | gerenciado pelo Render |
+| `auth-service` | Web Service (Node.js) | `services/auth/` |
+| `workers-service` | Web Service (Node.js) | `services/workers/` |
+| `referrals-service` | Web Service (Node.js) | `services/referrals/` |
+| `assistance-service` | Web Service (Node.js) | `services/assistance/` |
+| `reports-service` | Web Service (Node.js) | `services/reports/` |
+| `frontend` | Static Site | `apps/frontend/` |
+
+### Passo 1 — Primeiro deploy (Blueprint)
+
+1. Acesse o painel do Render → **New** → **Blueprint**
+2. Conecte o repositório GitHub
+3. O Render detectará o `render.yaml` automaticamente
+4. Preencha as variáveis marcadas como `sync: false` (veja tabela abaixo)
+5. Clique em **Apply**
+
+### Passo 2 — Variáveis obrigatórias no primeiro deploy
+
+| Variável | Serviço | Valor |
+|---|---|---|
+| `JWT_SECRET` | auth-service | string aleatória segura (ex: `openssl rand -base64 32`) |
+| `FRONTEND_URL` | todos os backends | deixar em branco por enquanto (preencher depois) |
+| `VITE_API_AUTH_URL` | frontend | deixar em branco por enquanto |
+| `VITE_API_WORKERS_URL` | frontend | deixar em branco por enquanto |
+| `VITE_API_REFERRALS_URL` | frontend | deixar em branco por enquanto |
+| `VITE_API_ASSISTANCE_URL` | frontend | deixar em branco por enquanto |
+| `VITE_API_REPORTS_URL` | frontend | deixar em branco por enquanto |
+
+> As variáveis `VITE_*` são embutidas no build do frontend. Se deixadas em branco no primeiro deploy, o sistema fará fallback para `localhost` (não funcionará em produção), mas o build concluirá sem erros.
+
+### Passo 3 — Pós-deploy: configurar URLs entre serviços
+
+Após o primeiro deploy, copie as URLs geradas pelo Render (formato `https://nome-do-servico.onrender.com`) e configure:
+
+**Nos backends (Dashboard do Render → cada serviço → Environment):**
+
+| Variável | Valor |
+|---|---|
+| `FRONTEND_URL` | URL do frontend gerada pelo Render |
+
+**No frontend (Dashboard → frontend → Environment):**
+
+| Variável | Valor |
+|---|---|
+| `VITE_API_AUTH_URL` | `https://auth-service-xxxx.onrender.com` |
+| `VITE_API_WORKERS_URL` | `https://workers-service-xxxx.onrender.com` |
+| `VITE_API_REFERRALS_URL` | `https://referrals-service-xxxx.onrender.com` |
+| `VITE_API_ASSISTANCE_URL` | `https://assistance-service-xxxx.onrender.com` |
+| `VITE_API_REPORTS_URL` | `https://reports-service-xxxx.onrender.com` |
+
+Após salvar, clique em **Manual Deploy** no serviço `frontend` para recompilar com as URLs corretas.
+
+### Banco de dados
+
+O Render cria o PostgreSQL automaticamente via `render.yaml`. As tabelas são criadas pelas migrations embutidas em cada serviço ao iniciar — **não é necessário executar o `init.sql` manualmente**.
+
+Tabelas criadas por serviço:
+
+| Serviço | Tabela criada |
+|---|---|
+| auth-service | `usuarios` |
+| workers-service | `trabalhadores` |
+| referrals-service | `empresas`, `vagas`, `encaminhamentos` |
+| assistance-service | `atendimentos` |
+
+### Observações sobre o plano gratuito
+
+- Serviços gratuitos entram em **sleep após 15 min de inatividade**. A primeira requisição demora ~30s para acordar.
+- O banco PostgreSQL gratuito tem limite de **1 GB** de armazenamento.
+- Para demonstração acadêmica, o plano gratuito é suficiente.
 
 ---
 
@@ -272,12 +379,38 @@ npm run test:bdd
 
 ## Variáveis de Ambiente
 
-Cada serviço lê `.env` na raiz do serviço:
+### Backend (todos os serviços)
+
+| Variável | Descrição | Padrão dev |
+|---|---|---|
+| `DATABASE_URL` | Connection string PostgreSQL | `postgresql://...@postgres:5432/empregabilidade_db` |
+| `NODE_ENV` | Ambiente de execução | `development` |
+| `PORT` | Porta do serviço | varia por serviço |
+| `FRONTEND_URL` | URL do frontend (para CORS em produção) | não definido (permite todas as origens) |
+
+### Auth Service (adicional)
+
+| Variável | Descrição |
+|---|---|
+| `JWT_SECRET` | Chave secreta para assinar tokens JWT |
+| `JWT_EXPIRES_IN` | Tempo de expiração do token (padrão: `24h`) |
+
+### Frontend (variáveis Vite, embutidas no build)
+
+| Variável | Padrão local |
+|---|---|
+| `VITE_API_AUTH_URL` | `http://localhost:3001` |
+| `VITE_API_WORKERS_URL` | `http://localhost:3002` |
+| `VITE_API_REFERRALS_URL` | `http://localhost:3003` |
+| `VITE_API_ASSISTANCE_URL` | `http://localhost:3004` |
+| `VITE_API_REPORTS_URL` | `http://localhost:3005` |
+
+### Arquivo .env para desenvolvimento local
 
 ```env
 DATABASE_URL=postgresql://empregabilidade:senha_segura_123@postgres:5432/empregabilidade_db
-JWT_SECRET=sua_chave_secreta
-PORT=3002
+JWT_SECRET=sua_chave_secreta_local
+PORT=3001
 NODE_ENV=development
 ```
 
@@ -425,4 +558,4 @@ cd services/workers && npx jest src/application/useCases/__tests__/CreateWorkerU
 
 ---
 
-**Versão**: 1.1.0 · **Última atualização**: 2026-06-10 · Projeto acadêmico integrador
+**Versão**: 1.2.0 · **Última atualização**: 2026-06-11 · Projeto acadêmico integrador

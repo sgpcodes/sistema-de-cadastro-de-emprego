@@ -10,7 +10,10 @@ const DATABASE_URL = process.env.DATABASE_URL || '';
 const pool = new Pool({ connectionString: DATABASE_URL });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL ?? true,
+  credentials: true,
+}));
 
 app.get('/health', (_req, res) => {
   res.status(200).json({ status: 'Reports Service is running' });
