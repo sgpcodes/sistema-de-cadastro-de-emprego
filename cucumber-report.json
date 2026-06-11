@@ -1,0 +1,1218 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "autenticar-usuário;login-bem-sucedido",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Login bem-sucedido",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "que o usuário está na página de login",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:23"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "preenche o email \"usuario@example.com\"",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:38"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 6,
+            "name": "preenche a senha \"senha123\"",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:42"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 7,
+            "name": "clica no botão \"Entrar\"",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:62"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 8,
+            "name": "o usuário é autenticado",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:78"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "um token JWT é gerado",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:83"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "o usuário é redirecionado para o dashboard",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:87"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "autenticar-usuário;falha-ao-fazer-login-com-email-inválido",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Falha ao fazer login com email inválido",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "que o usuário está na página de login",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:23"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "preenche um email inexistente",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:46"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "preenche uma senha",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:50"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "clica no botão \"Entrar\"",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:62"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 17,
+            "name": "o sistema exibe uma mensagem de erro",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:91"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "o usuário não é autenticado",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:98"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "autenticar-usuário;falha-ao-fazer-login-com-senha-incorreta",
+        "keyword": "Scenario",
+        "line": 20,
+        "name": "Falha ao fazer login com senha incorreta",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 21,
+            "name": "que existe um usuário cadastrado",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:28"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 22,
+            "name": "preenche o email correto",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:54"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 23,
+            "name": "preenche uma senha incorreta",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:58"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 24,
+            "name": "clica no botão \"Entrar\"",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:62"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 25,
+            "name": "o sistema exibe uma mensagem de erro",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:91"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 26,
+            "name": "o usuário não é autenticado",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:98"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "autenticar-usuário;logout-bem-sucedido",
+        "keyword": "Scenario",
+        "line": 28,
+        "name": "Logout bem-sucedido",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 29,
+            "name": "que o usuário está autenticado",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:32"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 30,
+            "name": "clica no botão \"Sair\"",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:62"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 31,
+            "name": "o token JWT é removido",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:103"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "o usuário é redirecionado para a página de login",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:107"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 33,
+            "name": "a sessão é encerrada",
+            "match": {
+              "location": "features\\step_definitions\\autenticacao.steps.ts:111"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "autenticar-usuário",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Autenticar usuário",
+    "tags": [],
+    "uri": "features\\autenticacao.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "cadastrar-trabalhador-no-sistema;cadastro-bem-sucedido-com-dados-válidos",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Cadastro bem-sucedido com dados válidos",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "que o atendente está na tela de cadastro de trabalhador",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:29"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "preenche o nome \"Carlos Eduardo Mendes\"",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:47"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 6,
+            "name": "preenche o CPF \"111.222.333-44\"",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:51"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 7,
+            "name": "preenche o telefone \"(11) 98765-4321\"",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:55"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "clica em Salvar Trabalhador",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:59"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "o trabalhador é cadastrado com sucesso",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:80"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "o trabalhador aparece na listagem",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:86"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "cadastrar-trabalhador-no-sistema;falha-ao-cadastrar-com-cpf-duplicado",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Falha ao cadastrar com CPF duplicado",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "que existe um trabalhador cadastrado com CPF \"555.666.777-88\"",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:34"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "tenta cadastrar outro trabalhador com o mesmo CPF",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:69"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "o sistema exibe erro de CPF duplicado",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:95"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "o segundo cadastro não é salvo",
+            "match": {
+              "location": "features\\step_definitions\\cadastro_trabalhador.steps.ts:107"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "cadastrar-trabalhador-no-sistema",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Cadastrar trabalhador no sistema",
+    "tags": [],
+    "uri": "features\\cadastro_trabalhador.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "registrar-contratação-de-trabalhador;contratação-bem-sucedida-—-atualizar-status-do-trabalhador",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Contratação bem-sucedida — atualizar status do trabalhador",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "que o trabalhador com CPF \"300400500-60\" está encaminhado",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:102"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "a empresa confirma a contratação",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:136"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 6,
+            "name": "o status do trabalhador é atualizado para \"CONTRATADO\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:146"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 7,
+            "name": "as informações são persistidas no sistema",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:152"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registrar-contratação-de-trabalhador;consultar-trabalhadores-contratados",
+        "keyword": "Scenario",
+        "line": 9,
+        "name": "Consultar trabalhadores contratados",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "que existem trabalhadores cadastrados no sistema",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:156"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "o atendente consulta a lista de trabalhadores",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:164"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "o sistema retorna a listagem com sucesso",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:169"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "registrar-contratação-de-trabalhador",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Registrar contratação de trabalhador",
+    "tags": [],
+    "uri": "features\\contratacao.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "encaminhar-trabalhador-para-vaga;registro-de-encaminhamento-bem-sucedido",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Registro de encaminhamento bem-sucedido",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "que existe um trabalhador disponível com CPF \"100200300-40\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:41"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 5,
+            "name": "que existe uma vaga aberta com ID registrado",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:53"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 6,
+            "name": "o atendente registra o encaminhamento do trabalhador para a vaga",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:67"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 7,
+            "name": "o encaminhamento é salvo com status \"PENDENTE\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:77"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "encaminhar-trabalhador-para-vaga;atualizar-status-do-trabalhador-para-encaminhado",
+        "keyword": "Scenario",
+        "line": 9,
+        "name": "Atualizar status do trabalhador para encaminhado",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "que o trabalhador com CPF \"200300400-50\" está disponível",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:91"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "o atendente atualiza o status do trabalhador para \"ENCAMINHADO\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:113"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "o trabalhador é atualizado com sucesso",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:125"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "o novo status do trabalhador é \"ENCAMINHADO\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:130"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "encaminhar-trabalhador-para-vaga",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Encaminhar trabalhador para vaga",
+    "tags": [],
+    "uri": "features\\encaminhamento.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "registrar-atendimento-de-seguro-desemprego;registro-de-atendimento-de-seguro-desemprego",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "Registro de atendimento de seguro-desemprego",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "que o atendente está na tela de assistência",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:176"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "registra um atendimento de tipo \"SEGURO_DESEMPREGO\" para \"Pedro Alves\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:180"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 6,
+            "name": "o atendimento é registrado com sucesso",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:192"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 7,
+            "name": "o tipo do atendimento é \"SEGURO_DESEMPREGO\"",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:198"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registrar-atendimento-de-seguro-desemprego;listar-atendimentos-registrados",
+        "keyword": "Scenario",
+        "line": 9,
+        "name": "Listar atendimentos registrados",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "que existem atendimentos cadastrados no sistema",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:202"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "o atendente consulta a lista de atendimentos",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:210"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "o sistema retorna os atendimentos cadastrados",
+            "match": {
+              "location": "features\\step_definitions\\encaminhamento_contratacao_seguro.steps.ts:215"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "registrar-atendimento-de-seguro-desemprego",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Registrar atendimento de seguro-desemprego",
+    "tags": [],
+    "uri": "features\\seguro_desemprego.feature"
+  }
+]

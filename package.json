@@ -14,11 +14,17 @@
     "dev": "concurrently \"cd apps/frontend && npm run dev\" \"cd services/workers && npm run dev\" \"cd services/referrals && npm run dev\" \"cd services/assistance && npm run dev\" \"cd services/reports && npm run dev\"",
     "build": "npm run build --workspaces",
     "test": "npm test --workspaces",
+    "test:workers": "cd services/workers && npm test",
+    "test:auth": "cd services/auth && npm test",
+    "test:bdd": "cucumber-js",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f"
   },
   "devDependencies": {
-    "concurrently": "^8.2.1"
+    "@cucumber/cucumber": "^13.0.0",
+    "concurrently": "^8.2.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }

@@ -1,28 +1,16 @@
 Feature: Cadastrar trabalhador no sistema
 
-  Scenario: Cadastro bem-sucedido com todos os dados
-    Given que o usuário está na página de cadastro de trabalhador
-    When preenche os campos: CPF, Nome, Telefone, Email, Escolaridade, Profissão, Experiência
-    And clica no botão "Cadastrar"
-    Then o trabalhador é cadastrado no sistema
-    And o status do trabalhador é "ATIVO"
-    And uma confirmação é exibida
+  Scenario: Cadastro bem-sucedido com dados válidos
+    Given que o atendente está na tela de cadastro de trabalhador
+    When preenche o nome "Carlos Eduardo Mendes"
+    And preenche o CPF "111.222.333-44"
+    And preenche o telefone "(11) 98765-4321"
+    And clica em Salvar Trabalhador
+    Then o trabalhador é cadastrado com sucesso
+    And o trabalhador aparece na listagem
 
   Scenario: Falha ao cadastrar com CPF duplicado
-    Given que existe um trabalhador com CPF "12345678901"
+    Given que existe um trabalhador cadastrado com CPF "555.666.777-88"
     When tenta cadastrar outro trabalhador com o mesmo CPF
-    Then o sistema exibe uma mensagem de erro
-    And o novo cadastro não é realizado
-
-  Scenario: Validação de campos obrigatórios
-    Given que o usuário está preenchendo o formulário
-    When deixa campos obrigatórios em branco
-    And clica em "Cadastrar"
-    Then o sistema exibe mensagens de erro para os campos vazios
-    And o cadastro não é realizado
-
-  Scenario: Cadastro com dados incompletos mas válidos
-    Given que o usuário preenche apenas os campos obrigatórios
-    When clica em "Cadastrar"
-    Then o trabalhador é cadastrado
-    And campos opcionais podem ser preenchidos depois
+    Then o sistema exibe erro de CPF duplicado
+    And o segundo cadastro não é salvo

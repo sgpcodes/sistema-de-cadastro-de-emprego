@@ -60,38 +60,44 @@ Sistema web completo para centralizar o atendimento ao trabalhador, desde o prim
 
 ## 📐 Padrões de Arquitetura
 
-### Clean Architecture em cada serviço
+### Clean Architecture — implementada em Auth Service e Workers Service
+
 ```
 src/
 ├── domain/
-│   ├── entities/        # Entidades de negócio
-│   └── repositories/    # Interfaces de repositório
+│   ├── entities/        # Ex: Worker.ts, Usuario.ts
+│   ├── repositories/    # Ex: IWorkerRepository.ts (interface)
+│   └── factories/       # Ex: WorkerFactory.ts (Factory Pattern)
 ├── application/
-│   ├── useCases/        # Casos de uso
-│   └── services/        # Serviços de aplicação
+│   ├── useCases/        # Ex: CreateWorkerUseCase.ts, LoginUseCase.ts
+│   └── strategies/      # Ex: FilterByStatusStrategy.ts (Strategy Pattern)
 ├── infrastructure/
-│   ├── database/        # Configuração DB
-│   └── repositories/    # Implementação de repositório
+│   ├── database/        # DatabaseConnection.ts (wrapper do Pool)
+│   └── repositories/    # Ex: WorkerRepository.ts (implementação concreta)
 ├── presentation/
-│   ├── controllers/     # Controllers
-│   ├── routes/          # Definição de rotas
-│   └── middlewares/     # Middlewares
-└── index.ts             # Inicialização do servidor
+│   ├── controllers/     # Ex: WorkerController.ts
+│   └── routes/          # Ex: workerRoutes.ts
+└── index.ts             # Composição de dependências (DI manual)
 ```
 
-### SOLID Principles
-- **S**: Cada classe tem responsabilidade única (Repository, Service, Controller)
-- **O**: Novo tipo de assistência sem modificar código existente
-- **L**: Substituição de abstrações sem quebra
-- **I**: Interfaces específicas por contexto
-- **D**: Dependência em abstrações, não em implementações
+### SOLID Principles — evidências no código
 
-### Design Patterns
-- Repository Pattern (Data access layer)
-- Factory Pattern (Criação de entidades)
-- Strategy Pattern (Tipos de atendimento)
-- Dependency Injection (Controllers e Services)
-- Observer Pattern (Notificações)
+| Princípio | Implementação |
+|---|---|
+| **S** — Single Responsibility | `WorkerController` só lida com HTTP; `CreateWorkerUseCase` só cria; `WorkerRepository` só persiste |
+| **O** — Open/Closed | Novos filtros via `IWorkerFilterStrategy` sem alterar `GetWorkersUseCase` |
+| **L** — Liskov Substitution | `WorkerRepository` substitui `IWorkerRepository` sem quebrar contratos |
+| **I** — Interface Segregation | `IWorkerRepository` expõe só o que o domínio precisa |
+| **D** — Dependency Inversion | `CreateWorkerUseCase` recebe `IWorkerRepository` (abstração), não `WorkerRepository` (concreção) |
+
+### Design Patterns — implementados no código
+
+| Padrão | Localização | Descrição |
+|---|---|---|
+| **Repository Pattern** | `IWorkerRepository` / `WorkerRepository` | Abstrai o acesso ao banco de dados |
+| **Factory Pattern** | `WorkerFactory` | Centraliza criação de entidades Worker com validação e defaults |
+| **Strategy Pattern** | `FilterByStatusStrategy`, `FilterByNameStrategy` | Algoritmos de filtro intercambiáveis sem alterar o use case |
+| **Dependency Injection** | `index.ts` de auth e workers | Composição manual — use cases recebem repositórios via construtor |
 
 ## 🗄️ Database Schema
 
@@ -106,26 +112,39 @@ Entidades principais:
 
 ## 🧪 Testes
 
-### Cobertura Esperada: 80%+
+### Testes Unitários (TDD) — 20 testes, todos passando
 
-### TDD (Test-Driven Development)
-Testes escritos **antes** da implementação
+**Auth Service** (`services/auth/src/application/useCases/__tests__/`):
+- `LoginUseCase.test.ts` — 4 casos: login OK, usuário não encontrado, senha errada, usuário inativo
+- `SignupUseCase.test.ts` — 2 casos: signup OK, email duplicado
 
-### Casos Mínimos:
-1. Login e Signup
-2. Cadastro de trabalhador
-3. Cadastro de vaga
-4. Encaminhamento
-5. Contratação
-6. Seguro-desemprego
+**Workers Service** (`services/workers/src/`):
+- `application/useCases/__tests__/CreateWorkerUseCase.test.ts` — 5 casos
+- `application/useCases/__tests__/UpdateWorkerUseCase.test.ts` — 3 casos
+- `application/useCases/__tests__/GetWorkersUseCase.test.ts` — 4 casos (inclui testes do Strategy Pattern)
+- `__tests__/workers.test.ts` — 8 casos (Factory Pattern + Filter Strategies)
 
-### BDD (Cucumber)
-Features em `features/` diretório:
-- `autenticacao.feature`
-- `cadastro_trabalhador.feature`
-- `encaminhamento.feature`
-- `contratacao.feature`
-- `seguro_desemprego.feature`
+**Rodar testes:**
+```bash
+cd services/workers && npm test
+cd services/auth && npm test
+# ou no root:
+npm run test:workers
+npm run test:auth
+```
+
+### BDD (Cucumber) — Cenários de comportamento
+
+**Features** (`features/`):
+- `autenticacao.feature` + `features/step_definitions/autenticacao.steps.ts`
+- `cadastro_trabalhador.feature` + `features/step_definitions/cadastro_trabalhador.steps.ts`
+- `encaminhamento.feature`, `contratacao.feature`, `seguro_desemprego.feature`
+
+**Rodar BDD** (requer serviços rodando via Docker):
+```bash
+docker-compose up -d
+npm run test:bdd
+```
 
 ## 🚀 Como Executar
 
