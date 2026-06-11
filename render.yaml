@@ -99,12 +99,15 @@ services:
         sync: false
 
   # ── Frontend (Static Site) ────────────────────────────────────────────────
+  # type: web + runtime: static é o formato correto do Render para sites estáticos.
+  # staticPublishPath deve ser relativo à raiz do repositório, não ao rootDir.
 
-  - type: static
+  - type: web
     name: frontend
+    runtime: static
     rootDir: apps/frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    staticPublishPath: ./apps/frontend/dist
     routes:
       - type: rewrite
         source: /*
