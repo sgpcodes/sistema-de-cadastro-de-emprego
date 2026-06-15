@@ -12,9 +12,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: empregabilidade_db
-          property: connectionString
+        sync: false
       - key: JWT_SECRET
         sync: false
       - key: JWT_EXPIRES_IN
@@ -35,9 +33,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: empregabilidade_db
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         sync: false
 
@@ -54,9 +50,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: empregabilidade_db
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         sync: false
 
@@ -73,9 +67,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: empregabilidade_db
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         sync: false
 
@@ -92,15 +84,11 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        fromDatabase:
-          name: empregabilidade_db
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         sync: false
 
   # ── Frontend (Static Site) ────────────────────────────────────────────────
-  # type: web + runtime: static é o formato correto do Render para sites estáticos.
-  # staticPublishPath deve ser relativo à raiz do repositório, não ao rootDir.
 
   - type: web
     name: frontend
@@ -123,11 +111,3 @@ services:
         sync: false
       - key: VITE_API_REPORTS_URL
         sync: false
-
-# ── PostgreSQL Gerenciado ──────────────────────────────────────────────────
-
-databases:
-  - name: empregabilidade_db
-    databaseName: empregabilidade_db
-    user: empregabilidade
-    region: oregon
