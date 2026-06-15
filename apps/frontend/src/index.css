@@ -832,4 +832,80 @@ tbody tr:hover {
     max-height: 95vh;
   }
 
+  .search-box {
+    width: 100%;
+  }
+
+  .table-scroll {
+    overflow-x: visible;
+  }
+
+  .table-scroll table {
+    min-width: 0;
+    display: block;
+  }
+
+  .table-scroll thead {
+    display: none;
+  }
+
+  .table-scroll tbody {
+    display: block;
+  }
+
+  .table-scroll tbody tr {
+    display: block;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  .table-scroll tbody tr:nth-child(even) {
+    background: var(--white);
+  }
+
+  .table-scroll tbody tr:hover {
+    background: var(--white);
+  }
+
+  .table-scroll td {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f4f8;
+  }
+
+  .table-scroll td::before {
+    content: attr(data-label);
+    flex: 0 0 80px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding-top: 3px;
+  }
+
+  .table-scroll td:last-child {
+    border-bottom: 0;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .table-scroll td[data-label="Ações"]::before {
+    display: none;
+  }
+
+  .table-scroll td.empty-table {
+    display: block;
+    border-bottom: 0;
+    text-align: center;
+  }
+
+  .table-scroll td.empty-table::before {
+    display: none;
+  }
+
 }

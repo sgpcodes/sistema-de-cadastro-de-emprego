@@ -98,7 +98,7 @@ export default function Table<T extends Record<string, ReactNode>>({
               paginatedData.map((row, rowIndex) => (
                 <tr key={String(row.id ?? rowIndex)}>
                   {columns.map((column) => (
-                    <td key={String(column.key)}>
+                    <td key={String(column.key)} data-label={column.label}>
                       {column.render ? column.render(row) : row[column.key]}
                     </td>
                   ))}
