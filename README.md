@@ -633,6 +633,18 @@ cd services/workers && npx jest src/application/useCases/__tests__/CreateWorkerU
 
 ---
 
+## Convenções de Desenvolvimento
+
+- **TypeScript** em todo o projeto — sem JavaScript puro
+- **Novos endpoints** em Referrals/Assistance: adicionar a migration no array de `runMigrations()` em `services/<serviço>/src/index.ts`
+- **Novos filtros de Workers**: criar nova classe implementando `IWorkerFilterStrategy` — nunca alterar `GetWorkersUseCase` diretamente (princípio Open/Closed)
+- **Testes**: escrever antes da implementação (TDD), manter cobertura ≥ 80%
+- **Novas funcionalidades**: criar feature BDD em `features/` com step definitions correspondentes em `features/step_definitions/`
+- **Migrations Docker**: usar `IF NOT EXISTS` / `ADD COLUMN IF NOT EXISTS` — nunca recriar o volume para adicionar colunas
+- **Variáveis de ambiente**: nunca commitar `.env` com credenciais reais — usar `.env.example` como referência
+
+---
+
 ## Próximos Passos
 
 1. Implementar validações mais robustas (CPF, CNPJ, e-mail)
