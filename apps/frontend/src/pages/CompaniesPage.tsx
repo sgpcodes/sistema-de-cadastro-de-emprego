@@ -168,22 +168,6 @@ const sectionLabel: React.CSSProperties = {
   textTransform: 'uppercase', letterSpacing: '0.04em',
 };
 
-const detailStyle: React.CSSProperties = { display: 'grid', gap: '10px' };
-
-const detailRowStyle: React.CSSProperties = {
-  display: 'grid', gridTemplateColumns: '180px 1fr',
-  gap: '8px', alignItems: 'start',
-  borderBottom: '1px solid #edf0f5', paddingBottom: '10px',
-};
-
-const detailLabelStyle: React.CSSProperties = {
-  color: '#6b7280', fontSize: '0.86rem', fontWeight: 800,
-};
-
-const detailValueStyle: React.CSSProperties = {
-  color: '#1f2937', fontSize: '0.95rem',
-  wordBreak: 'break-word', whiteSpace: 'pre-wrap',
-};
 
 export default function CompaniesPage() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -475,7 +459,7 @@ export default function CompaniesPage() {
         }
       >
         {detail && (
-          <div style={detailStyle}>
+          <div className="detail-grid">
             {/* Dados da Empresa */}
             <div style={{ marginBottom: '2px' }}>
               <span style={sectionLabel}>Dados da Empresa</span>
@@ -489,11 +473,11 @@ export default function CompaniesPage() {
               ['Qtd. Funcionários', detail.qtd_funcionarios != null ? String(detail.qtd_funcionarios) : '-'],
               ['Status', STATUS_LABELS[detail.status] || detail.status || '-'],
             ] as [string, string][]).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
                 {label === 'Status'
                   ? <span className={`status-badge ${STATUS_COLORS[detail.status] || 'status-green'}`}>{value}</span>
-                  : <span style={detailValueStyle}>{value}</span>}
+                  : <span className="detail-value">{value}</span>}
               </div>
             ))}
 
@@ -507,9 +491,9 @@ export default function CompaniesPage() {
               ['Bairro', detail.bairro || '-'],
               ['Cidade / UF', detail.cidade && detail.estado ? `${detail.cidade} - ${detail.estado}` : (detail.cidade || detail.estado || '-')],
             ] as [string, string][]).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
-                <span style={detailValueStyle}>{value}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
+                <span className="detail-value">{value}</span>
               </div>
             ))}
 
@@ -526,9 +510,9 @@ export default function CompaniesPage() {
               ['WhatsApp', detail.whatsapp || '-'],
               ['Site', detail.site || '-'],
             ] as [string, string][]).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
-                <span style={detailValueStyle}>{value}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
+                <span className="detail-value">{value}</span>
               </div>
             ))}
 
@@ -543,9 +527,9 @@ export default function CompaniesPage() {
                   ['Benefícios', detail.beneficios || '-'],
                   ['Observações', detail.observacoes || '-'],
                 ] as [string, string][]).map(([label, value]) => (
-                  <div key={label} style={detailRowStyle}>
-                    <span style={detailLabelStyle}>{label}</span>
-                    <span style={detailValueStyle}>{value}</span>
+                  <div key={label} className="detail-row">
+                    <span className="detail-label">{label}</span>
+                    <span className="detail-value">{value}</span>
                   </div>
                 ))}
               </>
@@ -609,9 +593,9 @@ export default function CompaniesPage() {
                 ['Cadastrado em', formatDateTime(detail.criado_em)],
                 ['Última atualização', formatDateTime(detail.atualizado_em)],
               ] as [string, string][]).map(([label, value]) => (
-                <div key={label} style={detailRowStyle}>
-                  <span style={detailLabelStyle}>{label}</span>
-                  <span style={detailValueStyle}>{value}</span>
+                <div key={label} className="detail-row">
+                  <span className="detail-label">{label}</span>
+                  <span className="detail-value">{value}</span>
                 </div>
               ))}
             </div>

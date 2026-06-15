@@ -67,29 +67,6 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('pt-BR');
 }
 
-const detailStyle: React.CSSProperties = { display: 'grid', gap: '12px' };
-
-const detailRowStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '160px 1fr',
-  gap: '8px',
-  alignItems: 'start',
-  borderBottom: '1px solid #edf0f5',
-  paddingBottom: '10px',
-};
-
-const detailLabelStyle: React.CSSProperties = {
-  color: '#6b7280',
-  fontSize: '0.86rem',
-  fontWeight: 800,
-};
-
-const detailValueStyle: React.CSSProperties = {
-  color: '#1f2937',
-  fontSize: '0.95rem',
-  wordBreak: 'break-word',
-  whiteSpace: 'pre-wrap',
-};
 
 const sectionLabel: React.CSSProperties = {
   fontSize: '0.78rem', fontWeight: 800, color: '#1e88e5',
@@ -347,13 +324,13 @@ export default function VacanciesPage() {
       >
         {selected && (
           <div className="form-stack">
-            <div style={detailRowStyle}>
-              <span style={detailLabelStyle}>Vaga</span>
-              <span style={detailValueStyle}>{selected.cargo}</span>
+            <div className="detail-row">
+              <span className="detail-label">Vaga</span>
+              <span className="detail-value">{selected.cargo}</span>
             </div>
-            <div style={detailRowStyle}>
-              <span style={detailLabelStyle}>Empresa</span>
-              <span style={detailValueStyle}>{selected.empresa_nome || '-'}</span>
+            <div className="detail-row">
+              <span className="detail-label">Empresa</span>
+              <span className="detail-value">{selected.empresa_nome || '-'}</span>
             </div>
             <div style={{ marginTop: '8px' }}>
               <Select
@@ -393,7 +370,7 @@ export default function VacanciesPage() {
         }
       >
         {selected && (
-          <div style={detailStyle}>
+          <div className="detail-grid">
             <div style={{ marginBottom: '2px' }}>
               <span style={sectionLabel}>Dados da Vaga</span>
             </div>
@@ -404,11 +381,11 @@ export default function VacanciesPage() {
               ['Data de publicação', formatDate(selected.criado_em)],
               ['Requisitos', selected.requisitos || '-'],
             ] as [string, string][]).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
                 {label === 'Status'
                   ? <span className={`status-badge ${STATUS_COLORS[selected.status] || 'status-blue'}`}>{value}</span>
-                  : <span style={detailValueStyle}>{value}</span>}
+                  : <span className="detail-value">{value}</span>}
               </div>
             ))}
 
@@ -425,9 +402,9 @@ export default function VacanciesPage() {
               ['Telefone', selected.empresa_telefone || selected.empresa_celular || '-'],
               ['E-mail', selected.empresa_email || '-'],
             ] as [string, string][]).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
-                <span style={detailValueStyle}>{value}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
+                <span className="detail-value">{value}</span>
               </div>
             ))}
           </div>

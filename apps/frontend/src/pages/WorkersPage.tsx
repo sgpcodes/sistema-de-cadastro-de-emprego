@@ -88,29 +88,6 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('pt-BR');
 }
 
-const detailStyle: React.CSSProperties = { display: 'grid', gap: '12px' };
-
-const detailRowStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '160px 1fr',
-  gap: '8px',
-  alignItems: 'start',
-  borderBottom: '1px solid #edf0f5',
-  paddingBottom: '10px',
-};
-
-const detailLabelStyle: React.CSSProperties = {
-  color: '#6b7280',
-  fontSize: '0.86rem',
-  fontWeight: 800,
-};
-
-const detailValueStyle: React.CSSProperties = {
-  color: '#1f2937',
-  fontSize: '0.95rem',
-  wordBreak: 'break-word',
-  whiteSpace: 'pre-wrap',
-};
 
 export default function WorkersPage() {
   const [workers, setWorkers] = useState<Worker[]>([]);
@@ -368,7 +345,7 @@ export default function WorkersPage() {
         }
       >
         {selected && (
-          <div style={detailStyle}>
+          <div className="detail-grid">
             {(
               [
                 ['Nome', selected.nome],
@@ -382,9 +359,9 @@ export default function WorkersPage() {
                 ['Atualizado em', formatDate(selected.atualizado_em)],
               ] as [string, string][]
             ).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
-                <span style={detailValueStyle}>{value}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
+                <span className="detail-value">{value}</span>
               </div>
             ))}
           </div>

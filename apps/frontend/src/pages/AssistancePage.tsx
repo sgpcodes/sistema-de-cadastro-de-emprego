@@ -98,29 +98,6 @@ function formatDateTime(iso: string) {
   });
 }
 
-const detailStyle: React.CSSProperties = { display: 'grid', gap: '12px' };
-
-const detailRowStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: '170px 1fr',
-  gap: '8px',
-  alignItems: 'start',
-  borderBottom: '1px solid #edf0f5',
-  paddingBottom: '10px',
-};
-
-const detailLabelStyle: React.CSSProperties = {
-  color: '#6b7280',
-  fontSize: '0.86rem',
-  fontWeight: 800,
-};
-
-const detailValueStyle: React.CSSProperties = {
-  color: '#1f2937',
-  fontSize: '0.95rem',
-  wordBreak: 'break-word',
-  whiteSpace: 'pre-wrap',
-};
 
 export default function AssistancePage() {
   const [records, setRecords] = useState<Assistance[]>([]);
@@ -406,7 +383,7 @@ export default function AssistancePage() {
         }
       >
         {selected && (
-          <div style={detailStyle}>
+          <div className="detail-grid">
             <div style={{ marginBottom: '2px' }}>
               <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e88e5', textTransform: 'uppercase' }}>
                 Dados da Pessoa Atendida
@@ -423,9 +400,9 @@ export default function AssistancePage() {
                 ['Experiência', selected.experiencia || '-'],
               ] as [string, string][]
             ).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
-                <span style={detailValueStyle}>{value}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
+                <span className="detail-value">{value}</span>
               </div>
             ))}
 
@@ -441,9 +418,9 @@ export default function AssistancePage() {
                 ['Descrição', selected.descricao || '-'],
               ] as [string, string][]
             ).map(([label, value]) => (
-              <div key={label} style={detailRowStyle}>
-                <span style={detailLabelStyle}>{label}</span>
-                <span style={detailValueStyle}>{value}</span>
+              <div key={label} className="detail-row">
+                <span className="detail-label">{label}</span>
+                <span className="detail-value">{value}</span>
               </div>
             ))}
           </div>
