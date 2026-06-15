@@ -4,7 +4,10 @@ export class DatabaseConnection {
   private pool: Pool;
 
   constructor(connectionString: string) {
-    this.pool = new Pool({ connectionString });
+    this.pool = new Pool({
+      connectionString,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+    });
   }
 
   async getConnection(): Promise<PoolClient> {

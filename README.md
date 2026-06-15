@@ -148,6 +148,85 @@ Tabelas criadas por serviço:
 
 ---
 
+## Deploy no Railway
+
+### Por que "Missing script: start" acontece
+
+Railway roda `npm start` no diretório configurado para cada serviço. Se o diretório não for configurado corretamente, Railway usa a **raiz do repositório** — e o `package.json` raiz não tem `start`. Isso faz **todos os serviços falharem** mesmo que os serviços individuais estejam corretos.
+
+### Pré-requisitos
+
+- Conta no [Railway.app](https://railway.app)
+- Repositório no GitHub conectado ao Railway
+
+### Estado dos scripts `start` por serviço
+
+| Serviço | Arquivo | Script `start` | Arquivo de entrada |
+|---|---|---|---|
+| Auth | `services/auth/package.json` | `node dist/index.js` | ✅ compilado pelo `tsc` |
+| Workers | `services/workers/package.json` | `node dist/index.js` | ✅ compilado pelo `tsc` |
+| Referrals | `services/referrals/package.json` | `node dist/index.js` | ✅ compilado pelo `tsc` |
+| Assistance | `services/assistance/package.json` | `node dist/index.js` | ✅ compilado pelo `tsc` |
+| Reports | `services/reports/package.json` | `node dist/index.js` | ✅ compilado pelo `tsc` |
+| Frontend | `apps/frontend/package.json` | `serve -s dist` | ✅ gerado pelo `vite build` |
+| **Raiz** | `package.json` | ❌ ausente (não deployar) | — |
+
+### Configuração do Railway (obrigatório para monorepo)
+
+Crie **7 serviços separados** no Railway dentro do mesmo projeto. Para cada serviço, configure o **Root Directory** no painel:
+
+| Serviço Railway | Root Directory | Variáveis necessárias |
+|---|---|---|
+| `auth-service` | `services/auth` | `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN=24h`, `FRONTEND_URL` |
+| `workers-service` | `services/workers` | `DATABASE_URL`, `FRONTEND_URL` |
+| `referrals-service` | `services/referrals` | `DATABASE_URL`, `FRONTEND_URL` |
+| `assistance-service` | `services/assistance` | `DATABASE_URL`, `FRONTEND_URL` |
+| `reports-service` | `services/reports` | `DATABASE_URL`, `FRONTEND_URL` |
+| `frontend` | `apps/frontend` | `VITE_API_AUTH_URL`, `VITE_API_WORKERS_URL`, `VITE_API_REFERRALS_URL`, `VITE_API_ASSISTANCE_URL`, `VITE_API_REPORTS_URL` |
+| PostgreSQL | — | criado pelo próprio Railway como Add-on |
+
+**Como configurar Root Directory no Railway:**
+> Dashboard → Serviço → Settings → Source → Root Directory → digitar o caminho
+
+Com o Root Directory correto, o Railway encontra o `package.json` de cada serviço e usa os scripts `build` e `start` correspondentes. Cada diretório de serviço também contém um `railway.json` com a configuração explícita como fallback.
+
+### Banco de dados no Railway
+
+1. No Railway, adicione um serviço **PostgreSQL** (Add New → Database → PostgreSQL)
+2. Railway injeta automaticamente `DATABASE_URL` nos serviços do mesmo projeto via variável de referência:
+   ```
+   ${{Postgres.DATABASE_URL}}
+   ```
+3. As tabelas são criadas pelas migrations automáticas de cada serviço no primeiro boot — não é necessário executar SQL manualmente
+
+### Variáveis de ambiente Railway (pós-deploy)
+
+Após os backends subirem, copie as URLs geradas (`https://nome-servico.up.railway.app`) e configure no serviço `frontend`:
+
+| Variável | Valor |
+|---|---|
+| `VITE_API_AUTH_URL` | URL do auth-service no Railway |
+| `VITE_API_WORKERS_URL` | URL do workers-service no Railway |
+| `VITE_API_REFERRALS_URL` | URL do referrals-service no Railway |
+| `VITE_API_ASSISTANCE_URL` | URL do assistance-service no Railway |
+| `VITE_API_REPORTS_URL` | URL do reports-service no Railway |
+
+Depois do deploy do frontend, configure `FRONTEND_URL` em cada backend com a URL gerada para o serviço `frontend`.
+
+### Testar localmente antes de subir
+
+```bash
+# Backend — simular produção local (requer PostgreSQL rodando)
+cd services/auth && npm install && npm run build && npm start
+cd services/workers && npm install && npm run build && npm start
+
+# Frontend — simular produção local
+cd apps/frontend && npm install && npm run build && npm start
+# acessa http://localhost:3000
+```
+
+---
+
 ## Como Executar
 
 ### Com Docker Compose (recomendado)

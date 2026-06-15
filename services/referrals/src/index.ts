@@ -7,7 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 3003;
 const DATABASE_URL = process.env.DATABASE_URL || '';
 
-const pool = new Pool({ connectionString: DATABASE_URL });
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+});
 
 app.use(express.json());
 app.use(cors({
