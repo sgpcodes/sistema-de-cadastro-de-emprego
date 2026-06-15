@@ -6,6 +6,7 @@ services:
     runtime: node
     rootDir: services/auth
     region: oregon
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
@@ -27,6 +28,7 @@ services:
     runtime: node
     rootDir: services/workers
     region: oregon
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
@@ -44,6 +46,7 @@ services:
     runtime: node
     rootDir: services/referrals
     region: oregon
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
@@ -61,6 +64,7 @@ services:
     runtime: node
     rootDir: services/assistance
     region: oregon
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
@@ -78,6 +82,7 @@ services:
     runtime: node
     rootDir: services/reports
     region: oregon
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
