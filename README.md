@@ -50,72 +50,104 @@ Sistema web completo para centralizar o atendimento ao trabalhador, desde o prim
 
 | Serviço | Porta local | Responsabilidade |
 |---|---|---|
-| Frontend (React + Vite) | 5173 | Interface do usuário |
+| Frontend (React + Vite) | 5173 | Interface do usuário — responsiva (mobile/tablet/desktop) |
 | Auth Service | 3001 | Autenticação JWT, cadastro de usuários |
 | Workers Service | 3002 | CRUD de trabalhadores (Clean Architecture) |
 | Referrals Service | 3003 | Empresas, vagas e encaminhamentos |
 | Assistance Service | 3004 | Registros de atendimento |
 | Reports Service | 3005 | Dashboard e relatórios analíticos |
-| PostgreSQL | 5432 | Banco de dados compartilhado |
+| PostgreSQL | 5432 | Banco de dados (Docker local) / Supabase (produção) |
 
 > Todos os serviços compartilham o mesmo PostgreSQL e aplicam suas próprias migrations ao iniciar.
 
 ---
 
-## Deploy no Render
+## Deploy em Produção (arquitetura atual)
+
+O sistema está implantado com a seguinte divisão:
+
+| Camada | Plataforma | Observação |
+|---|---|---|
+| Frontend | **Vercel** | Deploy automático a cada push no `main` |
+| 5 backends (auth, workers, referrals, assistance, reports) | **Render** (plano free) | `render.yaml` declara todos os serviços |
+| Banco de dados | **Supabase** (PostgreSQL gerenciado) | Session Pooler obrigatório no Render free tier |
+
+---
+
+## Deploy no Render (backends)
 
 ### Pré-requisitos
 
 - Conta no [Render.com](https://render.com) (plano gratuito é suficiente)
+- Conta no [Supabase.com](https://supabase.com) com projeto criado
 - Repositório no GitHub conectado ao Render
+
+### Por que Supabase e não o banco do Render?
+
+O Render free tier não tem saída IPv6. O host direto do Supabase (`db.<projeto>.supabase.co`) resolve apenas para IPv6, causando `ENETUNREACH`. A solução é usar a URL do **Session Pooler** do Supabase, que é IPv4-compatível:
+
+> Supabase → Connect → Session pooler → copiar a connection string
 
 ### Serviços criados pelo render.yaml
 
-O arquivo `render.yaml` declara **7 serviços** automaticamente:
+O arquivo `render.yaml` declara **5 serviços backend** (plano free, sem banco gerenciado):
 
 | Nome no Render | Tipo | Origem |
 |---|---|---|
-| `empregabilidade_db` | PostgreSQL | gerenciado pelo Render |
 | `auth-service` | Web Service (Node.js) | `services/auth/` |
 | `workers-service` | Web Service (Node.js) | `services/workers/` |
 | `referrals-service` | Web Service (Node.js) | `services/referrals/` |
 | `assistance-service` | Web Service (Node.js) | `services/assistance/` |
 | `reports-service` | Web Service (Node.js) | `services/reports/` |
-| `frontend` | Static Site | `apps/frontend/` |
 
-### Passo 1 — Primeiro deploy (Blueprint)
+### Passo 1 — Blueprint
 
 1. Acesse o painel do Render → **New** → **Blueprint**
 2. Conecte o repositório GitHub
 3. O Render detectará o `render.yaml` automaticamente
-4. Preencha as variáveis marcadas como `sync: false` (veja tabela abaixo)
+4. Preencha as variáveis marcadas como `sync: false`
 5. Clique em **Apply**
 
-### Passo 2 — Variáveis obrigatórias no primeiro deploy
+### Passo 2 — Variáveis de ambiente (Render)
 
 | Variável | Serviço | Valor |
 |---|---|---|
-| `JWT_SECRET` | auth-service | string aleatória segura (ex: `openssl rand -base64 32`) |
-| `FRONTEND_URL` | todos os backends | deixar em branco por enquanto (preencher depois) |
-| `VITE_API_AUTH_URL` | frontend | deixar em branco por enquanto |
-| `VITE_API_WORKERS_URL` | frontend | deixar em branco por enquanto |
-| `VITE_API_REFERRALS_URL` | frontend | deixar em branco por enquanto |
-| `VITE_API_ASSISTANCE_URL` | frontend | deixar em branco por enquanto |
-| `VITE_API_REPORTS_URL` | frontend | deixar em branco por enquanto |
+| `DATABASE_URL` | todos os backends | URL do Session Pooler do Supabase |
+| `JWT_SECRET` | auth-service | string aleatória segura (`openssl rand -base64 32`) |
+| `FRONTEND_URL` | todos os backends | URL do frontend no Vercel (preencher após deploy do Vercel) |
 
-> As variáveis `VITE_*` são embutidas no build do frontend. Se deixadas em branco no primeiro deploy, o sistema fará fallback para `localhost` (não funcionará em produção), mas o build concluirá sem erros.
+> **Atenção:** O buildCommand usa `npm install --include=dev` para garantir que `devDependencies` (TypeScript, `@types/*`) sejam instaladas durante o build em produção, já que `NODE_ENV=production` as excluiria por padrão.
 
-### Passo 3 — Pós-deploy: configurar URLs entre serviços
+### Banco de dados (Supabase)
 
-Após o primeiro deploy, copie as URLs geradas pelo Render (formato `https://nome-do-servico.onrender.com`) e configure:
+As tabelas são criadas pelas migrations embutidas em cada serviço ao iniciar — não é necessário executar SQL manualmente.
 
-**Nos backends (Dashboard do Render → cada serviço → Environment):**
-
-| Variável | Valor |
+| Serviço | Tabela criada |
 |---|---|
-| `FRONTEND_URL` | URL do frontend gerada pelo Render |
+| auth-service | `usuarios` |
+| workers-service | `trabalhadores` |
+| referrals-service | `empresas`, `vagas`, `encaminhamentos` |
+| assistance-service | `atendimentos` |
 
-**No frontend (Dashboard → frontend → Environment):**
+### Observações sobre o plano gratuito do Render
+
+- Serviços entram em **sleep após 15 min de inatividade**. A primeira requisição demora ~30s para acordar.
+- Para demonstração acadêmica, o plano gratuito é suficiente.
+
+---
+
+## Deploy no Vercel (frontend)
+
+### Pré-requisitos
+
+- Conta no [Vercel.com](https://vercel.com) conectada ao GitHub
+
+### Passos
+
+1. No Vercel → **Add New Project** → importar o repositório
+2. Configurar **Root Directory** como `apps/frontend`
+3. O `vercel.json` já configura build, output e rewrites para SPA automaticamente
+4. Adicionar as variáveis de ambiente antes do primeiro deploy:
 
 | Variável | Valor |
 |---|---|
@@ -125,26 +157,9 @@ Após o primeiro deploy, copie as URLs geradas pelo Render (formato `https://nom
 | `VITE_API_ASSISTANCE_URL` | `https://assistance-service-xxxx.onrender.com` |
 | `VITE_API_REPORTS_URL` | `https://reports-service-xxxx.onrender.com` |
 
-Após salvar, clique em **Manual Deploy** no serviço `frontend` para recompilar com as URLs corretas.
+> As variáveis `VITE_*` são embutidas no bundle em tempo de build. Qualquer alteração exige um novo deploy.
 
-### Banco de dados
-
-O Render cria o PostgreSQL automaticamente via `render.yaml`. As tabelas são criadas pelas migrations embutidas em cada serviço ao iniciar — **não é necessário executar o `init.sql` manualmente**.
-
-Tabelas criadas por serviço:
-
-| Serviço | Tabela criada |
-|---|---|
-| auth-service | `usuarios` |
-| workers-service | `trabalhadores` |
-| referrals-service | `empresas`, `vagas`, `encaminhamentos` |
-| assistance-service | `atendimentos` |
-
-### Observações sobre o plano gratuito
-
-- Serviços gratuitos entram em **sleep após 15 min de inatividade**. A primeira requisição demora ~30s para acordar.
-- O banco PostgreSQL gratuito tem limite de **1 GB** de armazenamento.
-- Para demonstração acadêmica, o plano gratuito é suficiente.
+5. Após o deploy, copie a URL do Vercel e configure `FRONTEND_URL` em cada backend no Render.
 
 ---
 
@@ -246,6 +261,8 @@ npm run dev
 ---
 
 ## Módulos Implementados
+
+> Todas as páginas são **totalmente responsivas**: sidebar vira barra de navegação inferior no celular, tabelas viram cartões empilhados, formulários colapsam para coluna única. Testado em mobile (360–430px), tablet (768px) e desktop.
 
 ### Dashboard Ilustrativo (`/`)
 - Exibe indicadores e gráficos demonstrativos
@@ -444,15 +461,15 @@ npm run test:bdd
 
 ## Stack Técnico
 
-**Frontend:** React 18 · TypeScript · Vite · React Router · Axios · Zustand
+**Frontend:** React 18 · TypeScript · Vite · React Router · Axios · Zustand · Design responsivo (mobile/tablet/desktop)
 
 **Backend:** Node.js 18 · Express.js · TypeScript · pg (node-postgres) · jsonwebtoken · bcrypt
 
-**Banco:** PostgreSQL 15
+**Banco:** PostgreSQL 15 (Docker local) · Supabase PostgreSQL (produção, via Session Pooler)
 
-**Testes:** Jest · ts-jest · Supertest · @cucumber/cucumber
+**Testes:** Jest · ts-jest · @cucumber/cucumber
 
-**Infra:** Docker · Docker Compose · GitHub Actions (CI/CD) · Vercel (frontend) · Render/Railway (backend)
+**Infra:** Docker · Docker Compose · Vercel (frontend) · Render free tier (backends) · Supabase (banco em produção)
 
 ---
 
@@ -637,4 +654,4 @@ cd services/workers && npx jest src/application/useCases/__tests__/CreateWorkerU
 
 ---
 
-**Versão**: 1.2.0 · **Última atualização**: 2026-06-11 · Projeto acadêmico integrador
+**Versão**: 1.3.0 · **Última atualização**: 2026-06-15 · Projeto acadêmico integrador
